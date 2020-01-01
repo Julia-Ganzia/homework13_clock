@@ -2,58 +2,148 @@
 // Import another styles from less files using @import "[NAME_OF_FILE].less"
 
 // Example styles
-@font-face {
-  font-family: "christmas";
-  src: url("../fonts/christmaseve.ttf");
+@clockColor: #34475e;
+@ClockBgColor: #669bd1;
+@bgColor: #fff;
+@clockSizeW: 220px;
+@z-index: 0;
+
+@keyframes load-inner1 {
+  0% {
+    height: 10%;
+  }
+  60% {
+    height: 190%;
+  }
+  100% {
+    height: 190%;
+  }
 }
 
-@bgColor: grey;
-@headerColor: #373333;
-
-@size: 40px;
-@family: "christmas";
-
-.baseBodyStyles() {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
+@keyframes load-inner2 {
+  0% {
+    height: 190%;
+  }
+  60% {
+    height: 0%;
+  }
+  100% {
+    height: 0%;
+  }
 }
 
-.flex(@direction) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: @direction;
+@keyframes clock-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  80% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
 }
 
 body {
-  .flex(column);
-  .baseBodyStyles();
+  width: 100vw;
+  height: 100vh;
+  position: relative;
   background: @bgColor;
+  overflow: hidden;
 
-  & > * {
-    font-size: @size;
-  }
-  & img {
-    border: 0.5px solid rgba(0, 0, 0, 0.5);
-    height: 250px;
-    width: 500px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 21px 30px #5c5656;
+  .line {
+    width: @clockSizeW+120px;
+    height: 45px;
+    background: @bgColor;
+    margin: auto;
+    padding: 30px;
+    border-radius: 25px;
+
+    nav {
+      width: 100%;
+      height: 100%;
+      background: @clockColor;
+      border-radius: inherit;
+    }
   }
 
-  & h1 {
-    .flex(row);
-    font-family: @family;
-    color: @headerColor;
-  }
-}
+  #clock {
+    width: @clockSizeW;
+    height: @clockSizeW*2.25;
+    position: relative;
+    margin: auto;
+    z-index: @z-index - 1;
+    animation: clock-rotate 3s infinite linear;
 
-.main_body {
-  &_text {
-    font-size: 35px;
-    font-family: @family;
+    &::before,
+    &::after {
+      content: "";
+      width: @clockSizeW;
+      height: @clockSizeW;
+      position: absolute;
+      top: -18%;
+      left: -11%;
+      background: @ClockBgColor;
+      border: 24px solid @clockColor;
+      border-radius: 115px 145px 0 145px;
+      transform: rotate(45deg);
+    }
+    &::after {
+      top: 64%;
+      transform: rotate(-135deg);
+    }
+    .center {
+      width: @clockSizeW / 3.4;
+      height: @clockSizeW / 2.24;
+      background: @clockColor;
+      position: relative;
+      top: 40%;
+      margin: auto;
+
+      &::before,
+      &::after {
+        content: "";
+        width: @clockSizeW * 0.85;
+        height: @clockSizeW * 0.85;
+        background: @bgColor;
+        border-radius: 0px 85px;
+        transform: rotate(45deg);
+        position: absolute;
+        left: -269%;
+        top: -45%;
+        z-index: @z-index + 2;
+      }
+      &:after {
+        left: 80%;
+      }
+    }
+    .load-Up,
+    .load-Up::after,
+    .load-Down,
+    .load-Down::after {
+      height: @clockSizeW / 2.3;
+      width: @clockSizeW * 0.98;
+      position: absolute;
+      z-index: @z-index + 1;
+      background: @clockColor;
+    }
+    .load-Up {
+      top: -15%;
+      border-radius: 190px 190px 0px 0px;
+      &::after {
+        content: "";
+        top: 100%;
+        animation: load-inner1 3s infinite linear;
+      }
+    }
+    .load-Down {
+      bottom: -15%;
+      border-radius: 0px 0px 190px 190px;
+      &::after {
+        content: "";
+        bottom: 100%;
+        animation: load-inner2 3s infinite linear;
+      }
+    }
   }
 }
